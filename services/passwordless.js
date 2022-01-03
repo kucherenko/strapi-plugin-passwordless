@@ -7,7 +7,7 @@
  */
 
 const _ = require("lodash");
-const crypto = require('crypto');
+const crypto = require("crypto");
 
 const {getAbsoluteServerUrl} = require('strapi-utils');
 
@@ -48,12 +48,10 @@ module.exports = {
         );
       }
 
-      console.log(role);
-
       return strapi.query('user', 'users-permissions').create({
         email,
         username: email,
-        role: {id: "1"}
+        role: {id: role.id}
       });
     }
     return user;
