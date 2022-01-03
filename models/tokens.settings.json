@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tokens",
+  "info": {
+    "name": "tokens"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "email": {
+      "type": "email",
+      "required": true,
+      "private": true
+    },
+    "body": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "private": true
+    },
+    "login_date": {
+      "type": "datetime"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
