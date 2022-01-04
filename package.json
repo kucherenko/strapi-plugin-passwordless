@@ -5,25 +5,33 @@
   "strapi": {
     "name": "Passwordless Login",
     "icon": "key",
-    "description": "The plugin give ability to login with mailed link to login."
+    "description": "(Non-official) The plugin give ability to login with mailed link to login."
   },
+  "keywords": [
+    "strapi",
+    "plugin",
+    "passwordless",
+    "login",
+    "authentification"
+  ],
   "dependencies": {},
   "author": {
-    "name": "A Strapi developer",
-    "email": "",
-    "url": ""
+    "name": "Andrey Kucherenko",
+    "email": "kucherenko.andrey@gmail.com",
+    "url": "https://github.com/kucherenko"
   },
   "maintainers": [
     {
-      "name": "A Strapi developer",
-      "email": "",
-      "url": ""
+      "name": "Andrey Kucherenko",
+      "email": "kucherenko.andrey@gmail.com",
+      "url": "https://github.com/kucherenko"
     }
   ],
   "engines": {
     "node": ">=10.16.0 <=14.x.x",
     "npm": ">=6.0.0"
   },
+  "homepage": "https://github.com/kucherenko/strapi-plugin-passwordless",
   "license": "MIT",
   "devDependencies": {
     "cz-conventional-changelog": "3.3.0"
