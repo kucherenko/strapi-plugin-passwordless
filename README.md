@@ -1,7 +1,7 @@
 # Strapi PasswordLess Plugin
 
 A plugin for [Strapi Headless CMS](https://github.com/strapi/strapi) that provides ability to sing-in/sing-up to an application by link had sent to email. 
-A plugin works together with [Strapi User Pemissions Plugin](https://github.com/strapi/strapi/tree/master/packages/plugins/users-permissions) and extends it functionality. 
+A plugin works together with [Strapi User Permissions Plugin](https://github.com/strapi/strapi/tree/master/packages/plugins/users-permissions) and extends it functionality. 
 For working with emails a plugin use [Strapi Email Plugin](https://docs.strapi.io/developer-docs/latest/plugins/email.html).
 
 ![Screenshot](screenshot.png)
@@ -59,7 +59,7 @@ The **Passwordless Login** plugin should appear in the **Plugins** section of St
 ## 🔌 Usage
 
 ### REST API
-
+Before using the services make a sure that endpoints open for unauthorized users.
 #### Email user with login link
 ```
 POST /passwordless/send-link
