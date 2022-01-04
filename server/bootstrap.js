@@ -10,7 +10,11 @@
 
 const usersPermissionsActions = require('../users-permissions-actions');
 
-module.exports = async () => {
+module.exports = async (
+  {
+    strapi
+  }
+) => {
   const pluginStore = strapi.store({
     environment: '',
     type: 'plugin',

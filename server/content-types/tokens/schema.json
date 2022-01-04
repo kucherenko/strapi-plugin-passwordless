@@ -2,6 +2,9 @@
   "kind": "collectionType",
   "collectionName": "tokens",
   "info": {
+    "singularName": "token",
+    "pluralName": "tokens",
+    "displayName": "Tokens",
     "name": "tokens"
   },
   "options": {
