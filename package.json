@@ -4,7 +4,7 @@
   "description": "This is the description of the plugin.",
   "strapi": {
     "kind": "plugin",
-    "name": "Passwordless Login",
+    "name": "passwordless",
     "icon": "key",
     "description": "(Non-official) A plugin for Strapi Headless CMS that provides ability to sign-in/sign-up to an application by link had sent to email."
   },
