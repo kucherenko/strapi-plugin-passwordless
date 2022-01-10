@@ -4,7 +4,7 @@ A plugin for [Strapi Headless CMS](https://github.com/strapi/strapi) that provid
 A plugin works together with [Strapi User Permissions Plugin](https://github.com/strapi/strapi/tree/master/packages/plugins/users-permissions) and extends it functionality. 
 For working with emails a plugin use [Strapi Email Plugin](https://docs.strapi.io/developer-docs/latest/plugins/email.html).
 
-![Screenshot](screenshot.png)
+![Screenshot](screenshot-v4.png)
 
 ## ⏳ Installation
 
@@ -81,6 +81,8 @@ Response:
 
 ### GraphQL API
 
+WIP for v4
+
 ```graphql
 sendLoginLink(email: String): PasswordlessSendLinkPayload!
 loginPasswordless(loginToken: String): PasswordlessLoginPayload!
@@ -89,7 +91,7 @@ loginPasswordless(loginToken: String): PasswordlessLoginPayload!
 ## 🙌 Versions 
 
  - `strapi-plugin-passwordless@3.x` - version for strapi v3
- - `strapi-plugin-passwordless@4.x` - version for strapi v4 (not ready yet, WIP)
+ - `strapi-plugin-passwordless@4.x` - version for strapi v4
 
 ## 🤝 Contributing
 

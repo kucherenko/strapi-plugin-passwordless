@@ -8,8 +8,7 @@
 
 const _ = require("lodash");
 const crypto = require("crypto");
-
-const {getAbsoluteServerUrl} = require('strapi-utils');
+const {sanitize} = require('@strapi/utils');
 
 module.exports = (
   {
@@ -17,6 +16,10 @@ module.exports = (
   }
 ) => {
   return {
+
+    async initialize() {
+    },
+
     settings() {
       const pluginStore = strapi.store({
         environment: '',
@@ -26,6 +29,15 @@ module.exports = (
       return pluginStore.get({key: 'settings'});
     },
 
+    userSettings() {
+      const pluginStore = strapi.store({
+        environment: '',
+        type: 'plugin',
+        name: 'users-permissions',
+      });
+      return pluginStore.get({key: 'advanced'});
+    },
+
     async isEnabled() {
       const settings = await this.settings();
       return !!settings.enabled;
@@ -33,78 +45,95 @@ module.exports = (
 
     async user(email) {
       const settings = await this.settings();
+      const userSettings = await this.userSettings();
       const {user: userService} = strapi.plugins['users-permissions'].services;
       const user = await userService.fetch({email});
 
       if (!user && settings.createUserIfNotExists) {
-
         const role = await strapi
-          .query('role', 'users-permissions')
-          .findOne({ type: settings.default_role }, []);
+          .query('plugin::users-permissions.role')
+          .findOne({type: userSettings.default_role}, []);
 
         if (!role) {
           return ctx.badRequest(
             null,
-            formatError({
+            {
               id: 'Auth.form.error.role.notFound',
               message: 'Impossible to find the default role.',
-            })
+            }
           );
         }
-
-        return strapi.query('user', 'users-permissions').create({
+        const newUser = {
           email,
           username: email,
           role: {id: role.id}
-        });
+        };
+        return strapi
+          .query('plugin::users-permissions.user')
+          .create({data: newUser, populate: ['role']});
       }
       return user;
     },
 
     async sendLoginLink(token) {
       const settings = await this.settings();
+      const user = await strapi.query('plugin::users-permissions.user').findOne({
+        where: {email: token.email}
+      });
+      const userSchema = strapi.getModel('plugin::users-permissions.user');
+      // Sanitize the template's user information
+      const sanitizedUserInfo = await sanitize.sanitizers.defaultSanitizeOutput(userSchema, user);
 
       const text = await this.template(settings.message_text, {
-        URL: `${getAbsoluteServerUrl(strapi.config)}/passwordless/login`,
+        URL: settings.confirmationUrl,
         CODE: token.body,
-      });
-      const html = await this.template(settings.message_html, {
-        URL: `${getAbsoluteServerUrl(strapi.config)}/passwordless/login`,
-        CODE: token.body,
+        USER: sanitizedUserInfo
       });
 
-      // Send an email to the user.
-      return strapi.plugins['email'].services.email.send({
+      const html = await this.template(settings.message_html, {
+        URL: settings.confirmationUrl,
+        CODE: token.body,
+        USER: sanitizedUserInfo
+      });
+
+      const subject = await this.template(settings.object, {
+        URL: settings.confirmationUrl,
+        CODE: token.body,
+        USER: sanitizedUserInfo
+      });
+
+      const sendData = {
         to: token.email,
         from:
           settings.from_email && settings.from_name
             ? `${settings.from_name} <${settings.from_email}>`
             : undefined,
         replyTo: settings.response_email,
-        subject: settings.object,
+        subject,
         text,
         html,
-      });
+      }
+      // Send an email to the user.
+      return await strapi
+        .plugin('email')
+        .service('email')
+        .send(sendData);
     },
 
     async createToken(email) {
-      const tokensService = strapi.query('tokens', 'passwordless');
-      const oldTokens = await tokensService.find({email});
-      await Promise.all(oldTokens.map((token) => {
-        return tokensService.update({id: token.id}, {is_active: false});
-      }));
+      const tokensService = strapi.query('plugin::passwordless.token');
+      tokensService.update({where: {email}, data: {is_active: false}});
       const body = crypto.randomBytes(20).toString('hex');
       const tokenInfo = {
         email,
         body,
-        create_date: new Date()
       };
-      return tokensService.create(tokenInfo);
+      return tokensService.create({data: tokenInfo});
     },
 
     updateTokenOnLogin(token) {
-      const tokensService = strapi.query('tokens', 'passwordless');
-      return tokensService.update({id: token.id}, {is_active: false, login_date: new Date()});
+      const tokensService = strapi.query('plugin::passwordless.token');
+      return tokensService.update({where: {id: token.id}, data: {is_active: false, login_date: new Date()}});
     },
 
     async isTokenValid(token) {
@@ -112,21 +141,21 @@ module.exports = (
         return false;
       }
       const settings = await this.settings();
-      const tokensService = strapi.query('tokens', 'passwordless');
-
-      const tokenDate = new Date(token.created_at).getTime() / 1000;
+      const tokenDate = new Date(token.createdAt).getTime() / 1000;
       const nowDate = new Date().getTime() / 1000;
+      return nowDate - tokenDate <= settings.expire_period;
+    },
 
-      const isValidDate = nowDate - tokenDate <= settings.expire_period;
-      if (!isValidDate) {
-        await tokensService.update({id: token.id}, {is_active: false});
-      }
-      return isValidDate;
+    async deactivateToken(token) {
+      const tokensService = strapi.query('plugin::passwordless.token');
+      await tokensService.update(
+        {where: {id: token.id}, data: {is_active: false}}
+      );
     },
 
     fetchToken(body) {
-      const tokensService = strapi.query('tokens', 'passwordless');
-      return tokensService.findOne({body});
+      const tokensService = strapi.query('plugin::passwordless.token');
+      return tokensService.findOne({where: {body}});
     },
 
     template(layout, data) {

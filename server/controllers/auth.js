@@ -4,9 +4,11 @@
  *
  * @description: A set of functions called "actions" for managing `Auth`.
  */
+
+const {sanitize} = require('@strapi/utils');
+
 /* eslint-disable no-useless-escape */
 const _ = require('lodash');
-const {sanitizeEntity} = require('strapi-utils');
 const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 module.exports = {
@@ -23,18 +25,22 @@ module.exports = {
     if (_.isEmpty(loginToken)) {
       return ctx.badRequest('token.invalid');
     }
-
     const token = await passwordless.fetchToken(loginToken);
 
     const isValid = await passwordless.isTokenValid(token);
 
     if (!isValid) {
+      if (token.is_active) {
+        await passwordless.deactivateToken(token);
+      }
       return ctx.badRequest('token.invalid');
     }
 
     await passwordless.updateTokenOnLogin(token);
 
-    const user = await userService.fetch({email: token.email});
+    const user = await strapi.query('plugin::users-permissions.user').findOne({
+      where: {email: token.email}
+    });
 
     if (!user) {
       return ctx.badRequest('wrong.email');
@@ -45,14 +51,15 @@ module.exports = {
     }
 
     if (!user.confirmed) {
-      await userService.edit({id: user.id}, {confirmed: true});
+      await userService.edit(user.id, {confirmed: true});
     }
+    const userSchema = strapi.getModel('plugin::users-permissions.user');
+    // Sanitize the template's user information
+    const sanitizedUserInfo = await sanitize.sanitizers.defaultSanitizeOutput(userSchema, user);
 
     ctx.send({
       jwt: jwtService.issue({id: user.id}),
-      user: sanitizeEntity(user, {
-        model: strapi.query('user', 'users-permissions').model,
-      }),
+      user: sanitizedUserInfo
     });
   },
 
@@ -79,7 +86,7 @@ module.exports = {
       return ctx.badRequest('wrong.email');
     }
 
-    const user = passwordless.user(email);
+    const user = await passwordless.user(email);
 
     if (!user) {
       return ctx.badRequest('wrong.email');
@@ -97,7 +104,7 @@ module.exports = {
         sent: true,
       });
     } catch (err) {
-      return ctx.badRequest(null, err);
+      return ctx.badRequest(err);
     }
   },
 

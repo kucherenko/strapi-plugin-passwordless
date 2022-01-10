@@ -4,32 +4,35 @@
   "info": {
     "singularName": "token",
     "pluralName": "tokens",
-    "displayName": "Tokens",
-    "name": "tokens"
+    "displayName": "Token",
+    "name": "token"
   },
   "options": {
-    "increments": true,
+    "increments": false,
     "timestamps": true,
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "attributes": {
     "email": {
       "type": "email",
       "required": true,
-      "private": true
+      "private": true,
+      "configurable": false
     },
     "body": {
       "type": "string",
       "required": true,
       "unique": true,
-      "private": true
+      "private": true,
+      "configurable": false
     },
     "login_date": {
       "type": "datetime"
     },
     "is_active": {
       "type": "boolean",
-      "default": true
+      "default": true,
+      "configurable": false
     }
   }
 }

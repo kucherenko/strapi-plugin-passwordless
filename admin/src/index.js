@@ -1,52 +1,70 @@
 import pluginPkg from '../../package.json';
-import pluginId from './pluginId';
-import App from './containers/App';
-import Initializer from './containers/Initializer';
-import lifecycles from './lifecycles';
-import trads from './translations';
+import pluginId from './utils/pluginId';
+import {prefixPluginTranslations} from '@strapi/helper-plugin';
+import pluginPermissions from './permissions';
+import getTrad from "./utils/getTrad";
 
-export default strapi => {
-  const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
-  const icon = pluginPkg.strapi.icon;
-  const name = pluginPkg.strapi.name;
+const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
+const name = pluginPkg.strapi.name;
 
-  const plugin = {
-    blockerComponent: null,
-    blockerComponentProps: {},
-    description: pluginDescription,
-    icon,
-    id: pluginId,
-    initializer: Initializer,
-    injectedComponents: [],
-    isReady: false,
-    isRequired: pluginPkg.strapi.required || false,
-    layout: null,
-    lifecycles,
-    mainComponent: App,
-    name,
-    preventComponentRendering: false,
-    trads,
-    menu: {
-      pluginsSectionLinks: [
-        {
-          destination: `/plugins/${pluginId}`,
-          icon,
-          label: {
-            id: `${pluginId}.plugin.name`,
-            defaultMessage: name,
-          },
-          name,
-          permissions: [
-            // Uncomment to set the permissions of the plugin here
-            // {
-            //   action: '', // the action name should be plugins::plugin-name.actionType
-            //   subject: null,
-            // },
-          ],
+export default {
+  register(app) {
+    const plugin = {
+      description: pluginDescription,
+      id: pluginId,
+      enabled: true,
+      name,
+    };
+
+    app.createSettingSection(
+      {
+        id: pluginId,
+        intlLabel: {
+          id: getTrad('Header.Settings'),
+          defaultMessage: 'Passwordless Login',
         },
-      ],
-    },
-  };
-
-  return strapi.registerPlugin(plugin);
+      },
+      [
+        {
+          intlLabel: {
+            id: getTrad('Form.title.Settings'),
+            defaultMessage: 'Settings',
+          },
+          id: 'passwordless-settings',
+          to: `/settings/${pluginId}`,
+          Component: async () => {
+            return await import(
+              /* webpackChunkName: "password-settings-page" */ './pages/Settings'
+              );
+          },
+          permissions: pluginPermissions.readSettings,
+        },
+      ]
+    );
+    app.registerPlugin(plugin);
+  },
+  bootstrap(app) {
+  },
+  async registerTrads({locales}) {
+    const importedTrads = await Promise.all(
+      locales.map((locale) => {
+        return import(
+          /* webpackChunkName: "passwordless-[request]" */ `./translations/${locale}.json`
+          )
+          .then(({default: data}) => {
+            return {
+              data: prefixPluginTranslations(data, pluginId),
+              locale,
+            };
+          })
+          .catch(() => {
+            return {
+              data: {},
+              locale,
+            };
+          });
+      }),
+    );
+    return Promise.resolve(importedTrads);
+  }
 };

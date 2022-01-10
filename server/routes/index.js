@@ -1,56 +1,6 @@
+'use strict';
+
 module.exports = {
-  routes: [
-    {
-      method: 'GET',
-      path: '/',
-      handler: 'passwordless.index',
-      config: { policies: [] }
-    },
-    {
-      method: 'GET',
-      path: '/settings',
-      handler: 'Passwordless.getSettings',
-      config: {
-        policies: [
-          [
-            'admin::hasPermissions',
-            [ 'plugins::passwordless.settings.read' ]
-          ]
-        ]
-      }
-    },
-    {
-      method: 'PUT',
-      path: '/settings',
-      handler: 'Passwordless.updateSettings',
-      config: {
-        policies: [
-          [
-            'admin::hasPermissions',
-            [ 'plugins::passwordless.settings.update' ]
-          ]
-        ]
-      }
-    },
-    {
-      method: 'GET',
-      path: '/passwordless/login',
-      handler: 'Auth.login',
-      config: {
-        policies: [],
-        prefix: '',
-        description: 'Login a user with one time password'
-      }
-    },
-    {
-      method: 'POST',
-      path: '/passwordless/send-link',
-      handler: 'Auth.sendLink',
-      config: {
-        policies: [ 'plugins::passwordless.ratelimit' ],
-        prefix: '',
-        description: 'Send an email to user with login link'
-      }
-    }
-  ]
-}
+  admin: require('./admin'),
+  'content-api': require('./content-api'),
+};

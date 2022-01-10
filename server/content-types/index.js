@@ -1,7 +1,7 @@
 "use strict"
 
-const tokens = require("./tokens");
+const token = require("./token");
 
 module.exports = {
-  tokens
+  token
 };
