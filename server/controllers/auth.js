@@ -27,12 +27,14 @@ module.exports = {
     }
     const token = await passwordless.fetchToken(loginToken);
 
+    if (!token || !token.is_active) {
+      return ctx.badRequest('token.invalid');
+    }
+
     const isValid = await passwordless.isTokenValid(token);
 
     if (!isValid) {
-      if (token.is_active) {
-        await passwordless.deactivateToken(token);
-      }
+      await passwordless.deactivateToken(token);
       return ctx.badRequest('token.invalid');
     }
 
@@ -107,5 +109,4 @@ module.exports = {
       return ctx.badRequest(err);
     }
   },
-
 };

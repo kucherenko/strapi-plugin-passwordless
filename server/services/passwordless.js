@@ -137,9 +137,6 @@ module.exports = (
     },
 
     async isTokenValid(token) {
-      if (!token || !token.is_active) {
-        return false;
-      }
       const settings = await this.settings();
       const tokenDate = new Date(token.createdAt).getTime() / 1000;
       const nowDate = new Date().getTime() / 1000;
