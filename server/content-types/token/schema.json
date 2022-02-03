@@ -27,7 +27,8 @@
       "configurable": false
     },
     "login_date": {
-      "type": "datetime"
+      "type": "datetime",
+      "configurable": false
     },
     "is_active": {
       "type": "boolean",
