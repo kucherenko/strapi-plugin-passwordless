@@ -26,6 +26,11 @@
       "private": true,
       "configurable": false
     },
+    "context": {
+      "type": "json",
+      "private": true,
+      "configurable": false
+    },
     "login_date": {
       "type": "datetime",
       "configurable": false

@@ -61,7 +61,8 @@ module.exports = {
 
     ctx.send({
       jwt: jwtService.issue({id: user.id}),
-      user: sanitizedUserInfo
+      user: sanitizedUserInfo,
+      context: token.context
     });
   },
 
@@ -81,17 +82,28 @@ module.exports = {
     }
 
     const email = params.email.trim().toLowerCase();
+    const context = params.context || {};
+    const username = params.username || null;
 
     const isEmail = emailRegExp.test(email);
 
-    if (!isEmail) {
+    if (email && !isEmail) {
       return ctx.badRequest('wrong.email');
     }
 
-    const user = await passwordless.user(email);
+    let user;
+    try {
+      user = await passwordless.user(email, username);
+    } catch (e) {
+      return ctx.badRequest('wrong.user')
+    }
 
     if (!user) {
       return ctx.badRequest('wrong.email');
+    }
+
+    if (email && user.email !== email) {
+      return ctx.badRequest('wrong.user')
     }
 
     if (user.blocked) {
@@ -99,10 +111,11 @@ module.exports = {
     }
 
     try {
-      const token = await passwordless.createToken(email);
+      const token = await passwordless.createToken(user.email, context);
       await passwordless.sendLoginLink(token);
       ctx.send({
         email,
+        username,
         sent: true,
       });
     } catch (err) {

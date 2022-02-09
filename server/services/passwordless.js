@@ -43,36 +43,37 @@ module.exports = (
       return !!settings.enabled;
     },
 
-    async user(email) {
-      const settings = await this.settings();
+    async createUser(user) {
       const userSettings = await this.userSettings();
+      const role = await strapi
+        .query('plugin::users-permissions.role')
+        .findOne({type: userSettings.default_role}, []);
+
+      const newUser = {
+        email: user.email,
+        username: user.username || user.email,
+        role: {id: role.id}
+      };
+      return strapi
+        .query('plugin::users-permissions.user')
+        .create({data: newUser, populate: ['role']});
+    },
+
+    async user(email, username) {
+      const settings = await this.settings();
       const {user: userService} = strapi.plugins['users-permissions'].services;
-      const user = await userService.fetch({email});
-
-      if (!user && settings.createUserIfNotExists) {
-        const role = await strapi
-          .query('plugin::users-permissions.role')
-          .findOne({type: userSettings.default_role}, []);
-
-        if (!role) {
-          return ctx.badRequest(
-            null,
-            {
-              id: 'Auth.form.error.role.notFound',
-              message: 'Impossible to find the default role.',
-            }
-          );
-        }
-        const newUser = {
-          email,
-          username: email,
-          role: {id: role.id}
-        };
-        return strapi
-          .query('plugin::users-permissions.user')
-          .create({data: newUser, populate: ['role']});
+      const user = email ? await userService.fetch({email}) : null;
+      if (user) {
+        return user;
       }
-      return user;
+      const userByUsername = username ? await userService.fetch({username}) : null;
+      if (userByUsername) {
+        return userByUsername
+      }
+      if (email && settings.createUserIfNotExists) {
+        return this.createUser({email, username})
+      }
+      return false;
     },
 
     async sendLoginLink(token) {
@@ -120,13 +121,14 @@ module.exports = (
         .send(sendData);
     },
 
-    async createToken(email) {
+    async createToken(email, context) {
       const tokensService = strapi.query('plugin::passwordless.token');
       tokensService.update({where: {email}, data: {is_active: false}});
       const body = crypto.randomBytes(20).toString('hex');
       const tokenInfo = {
         email,
         body,
+        context: JSON.stringify(context)
       };
       return tokensService.create({data: tokenInfo});
     },

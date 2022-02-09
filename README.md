@@ -62,12 +62,28 @@ The **Passwordless Login** plugin should appear in the **Plugins** section of St
 Before using the services make a sure that endpoints open for unauthorized users.
 #### Email user with login link
 ```
-POST /passwordless/send-link
-{"email": "user@email.com"}
+POST /passwordless/send-link (v4 /api/passwordless/send-link)
+{
+  "email": "user@email.com"
+  "username": "John Bull" // username for new user
+  "context": { 
+    // context of authentification, optional parameter e.g. "currentUrl": "...my page..."
+    ...
+  }  
+}
 ```
+
+Send mail to user by username
+```
+POST /passwordless/send-link 
+{
+  "username": "John Bull"
+}
+```
+
 #### Login with token
 ```
-GET /passwordless/login?loginToken={tokenFromEmail} 
+GET /passwordless/login?loginToken={tokenFromEmail} (v4 /api/passwordless/login?loginToken={tokenFromEmail})
 ```
 Response:
 ```
@@ -75,6 +91,9 @@ Response:
   "jwt":  "...jwt auth token..."
   "user": {
     ...strapi user...
+  },
+  "context": {
+    ... context, provided to sendlink, e.g. currentPage, sessionId etc.
   }
 }
 ```

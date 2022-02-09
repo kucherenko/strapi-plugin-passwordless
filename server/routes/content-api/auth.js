@@ -1,12 +1,12 @@
 module.exports = [
   {
     method: 'GET',
-    path: '/passwordless/login',
+    path: '/login',
     handler: 'auth.login',
   },
   {
     method: 'POST',
-    path: '/passwordless/send-link',
+    path: '/send-link',
     handler: 'auth.sendLink',
   }
 ]
