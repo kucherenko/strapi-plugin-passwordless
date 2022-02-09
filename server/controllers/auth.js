@@ -59,10 +59,16 @@ module.exports = {
     // Sanitize the template's user information
     const sanitizedUserInfo = await sanitize.sanitizers.defaultSanitizeOutput(userSchema, user);
 
+    let context;
+    try {
+      context = JSON.parse(token.context);
+    } catch (e) {
+      context = {}
+    }
     ctx.send({
       jwt: jwtService.issue({id: user.id}),
       user: sanitizedUserInfo,
-      context: JSON.parse(token.context)
+      context
     });
   },
 
