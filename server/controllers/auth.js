@@ -77,11 +77,7 @@ module.exports = {
 
     const params = _.assign(ctx.request.body);
 
-    if (!params.email) {
-      return ctx.badRequest('missing.email');
-    }
-
-    const email = params.email.trim().toLowerCase();
+    const email = params.email ? params.email.trim().toLowerCase() : null;
     const context = params.context || {};
     const username = params.username || null;
 
