@@ -62,7 +62,7 @@ module.exports = {
     ctx.send({
       jwt: jwtService.issue({id: user.id}),
       user: sanitizedUserInfo,
-      context: token.context
+      context: JSON.parse(token.context)
     });
   },
 
