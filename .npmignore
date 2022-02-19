@@ -3,3 +3,5 @@ screenshot.png
 screenshot-v4.png
 tests
 jest.config.js
+.idea
+coverage
