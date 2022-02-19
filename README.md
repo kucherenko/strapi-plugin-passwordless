@@ -62,7 +62,7 @@ The **Passwordless Login** plugin should appear in the **Plugins** section of St
 Before using the services make a sure that endpoints open for unauthorized users.
 #### Email user with login link
 ```
-POST /passwordless/send-link (v4 /api/passwordless/send-link)
+POST /api/passwordless/send-link
 {
   "email": "user@email.com"
   "username": "John Bull" // username for new user
@@ -83,7 +83,7 @@ POST /passwordless/send-link
 
 #### Login with token
 ```
-GET /passwordless/login?loginToken={tokenFromEmail} (v4 /api/passwordless/login?loginToken={tokenFromEmail})
+GET /api/passwordless/login?loginToken={tokenFromEmail}
 ```
 Response:
 ```
@@ -100,17 +100,13 @@ Response:
 
 ### GraphQL API
 
-WIP for v4
-
-```graphql
-sendLoginLink(email: String): PasswordlessSendLinkPayload!
-loginPasswordless(loginToken: String): PasswordlessLoginPayload!
-```
+WIP
 
 ## 🙌 Versions 
 
- - `strapi-plugin-passwordless@3.x` - version for strapi v3
- - `strapi-plugin-passwordless@4.x` - version for strapi v4
+- `strapi-plugin-passwordless@4.x` - version for strapi v4
+- `strapi-plugin-passwordless@3.x` - version for strapi v3 ([dev branch](https://github.com/kucherenko/strapi-plugin-passwordless/tree/v3)) 
+
 
 ## 🤝 Contributing
 
