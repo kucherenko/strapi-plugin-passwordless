@@ -1,10 +1,10 @@
-![Logo](./logo.png)
+![Logo](https://github.com/kucherenko/strapi-plugin-passwordless/blob/main/logo.png?raw=true)
 # Strapi PasswordLess Plugin
 A plugin for [Strapi Headless CMS](https://github.com/strapi/strapi) that provides ability to sign-in/sign-up to an application by link had sent to email. 
 A plugin works together with [Strapi User Permissions Plugin](https://github.com/strapi/strapi/tree/master/packages/plugins/users-permissions) and extends it functionality. 
 For working with emails a plugin use [Strapi Email Plugin](https://docs.strapi.io/developer-docs/latest/plugins/email.html).
 
-![Screenshot](screenshot-v4.png)
+![Screenshot](https://github.com/kucherenko/strapi-plugin-passwordless/raw/main/screenshot-v4.png?raw=true)
 
 ## ⏳ Installation
 
@@ -20,7 +20,6 @@ yarn create strapi-app my-project --quickstart
 npx create-strapi-app my-project --quickstart
 ```
 
-_This command generates a brand new project with the default features (authentication, permissions, content management, content type builder & file upload). The **Quickstart** command installs Strapi using a **SQLite** database which is used for prototyping in development._
 
 - Configure the `Strapi email` plugin ( [official documentation](https://docs.strapi.io/developer-docs/latest/plugins/email.html) )
 
@@ -54,12 +53,11 @@ yarn develop --watch-admin
 npm run develop --watch-admin
 ```
 
-The **Passwordless Login** plugin should appear in the **Plugins** section of Strapi sidebar after you run app again.
+The **Passwordless** plugin should appear in the **Plugins** section of Strapi sidebar after you run app again.
 
 ## 🔌 Usage
 
 ### REST API
-Before using the services make a sure that endpoints open for unauthorized users.
 #### Email user with login link
 ```
 POST /api/passwordless/send-link
@@ -75,7 +73,7 @@ POST /api/passwordless/send-link
 
 Send mail to user by username
 ```
-POST /passwordless/send-link 
+POST /api/passwordless/send-link 
 {
   "username": "John Bull"
 }
