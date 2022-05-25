@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-passwordless",
-  "version": "4.0.6-1",
+  "version": "4.0.6",
   "description": "A plugin for Strapi Headless CMS that provides ability to sign-in/sign-up to an application by link had sent to email.",
   "strapi": {
     "displayName": "Passwordless",
