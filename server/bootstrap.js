@@ -51,6 +51,7 @@ module.exports = async (
       from_name: 'Administration Panel',
       from_email: 'no-reply@strapi.io',
       response_email: '',
+      token_length: 20,
       object: 'Passwordless Login',
       message_html: `<p>Hi!</p>
 <p>Please click on the link below to login on the site.</p>

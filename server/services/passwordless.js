@@ -122,9 +122,11 @@ module.exports = (
     },
 
     async createToken(email, context) {
+      const settings = await this.settings();
+      const {token_length = 20} = settings;
       const tokensService = strapi.query('plugin::passwordless.token');
       tokensService.update({where: {email}, data: {is_active: false}});
-      const body = crypto.randomBytes(20).toString('hex');
+      const body = crypto.randomBytes(token_length).toString('hex');
       const tokenInfo = {
         email,
         body,

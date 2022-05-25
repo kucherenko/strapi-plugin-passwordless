@@ -37,6 +37,23 @@ const layout = [
   },
   {
     intlLabel: {
+      id: getTrad('Settings.token_length.label'),
+      defaultMessage: 'Settings.token_length.label',
+    },
+    description: {
+      id: getTrad('Settings.token_length.description'),
+      defaultMessage: "Settings.token_length.description",
+    },
+    name: 'token_length',
+    type: 'number',
+    defaultValue: 20,
+    size: {
+      col: 6,
+      xs: 6,
+    },
+  },
+  {
+    intlLabel: {
       id: getTrad('Settings.expire_period.label'),
       defaultMessage: 'Settings.expire_period.label',
     },
@@ -47,8 +64,8 @@ const layout = [
     name: 'expire_period',
     type: 'number',
     size: {
-      col: 12,
-      xs: 12,
+      col: 6,
+      xs: 6,
     },
   },
   {

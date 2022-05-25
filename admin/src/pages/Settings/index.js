@@ -94,9 +94,7 @@ const SettingsPage = () => {
 
   const handleSubmit = async body => {
     lockApp();
-    const urlConfirmation = body.email_confirmation ? body.email_confirmation_redirection : '';
-
-    await submitMutation.mutateAsync({ ...body, email_confirmation_redirection: urlConfirmation });
+    await submitMutation.mutateAsync(body);
   };
 
   if (isLoading) {
