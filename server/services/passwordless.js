@@ -62,11 +62,11 @@ module.exports = (
     async user(email, username) {
       const settings = await this.settings();
       const {user: userService} = strapi.plugins['users-permissions'].services;
-      const user = email ? await userService.fetch({email}) : null;
+      const user = email ? await this.fetchUser({email}) : null;
       if (user) {
         return user;
       }
-      const userByUsername = username ? await userService.fetch({username}) : null;
+      const userByUsername = username ? await this.fetchUser({username}) : null;
       if (userByUsername) {
         return userByUsername
       }
@@ -78,29 +78,24 @@ module.exports = (
 
     async sendLoginLink(token) {
       const settings = await this.settings();
-      const user = await strapi.query('plugin::users-permissions.user').findOne({
-        where: {email: token.email}
-      });
-      const userSchema = strapi.getModel('plugin::users-permissions.user');
-      // Sanitize the template's user information
-      const sanitizedUserInfo = await sanitize.sanitizers.defaultSanitizeOutput(userSchema, user);
+      const user = await this.fetchUser({email: token.email})
 
       const text = await this.template(settings.message_text, {
         URL: settings.confirmationUrl,
         CODE: token.body,
-        USER: sanitizedUserInfo
+        USER: user
       });
 
       const html = await this.template(settings.message_html, {
         URL: settings.confirmationUrl,
         CODE: token.body,
-        USER: sanitizedUserInfo
+        USER: user
       });
 
       const subject = await this.template(settings.object, {
         URL: settings.confirmationUrl,
         CODE: token.body,
-        USER: sanitizedUserInfo
+        USER: user
       });
 
       const sendData = {
@@ -157,6 +152,15 @@ module.exports = (
     fetchToken(body) {
       const tokensService = strapi.query('plugin::passwordless.token');
       return tokensService.findOne({where: {body}});
+    },
+
+    async fetchUser(data) {
+      const userSchema = strapi.getModel('plugin::users-permissions.user');
+      const user =  await strapi.query('plugin::users-permissions.user').findOne({where: data, populate: ['role']})
+      if (!user) {
+        return user;
+      }
+      return await sanitize.sanitizers.defaultSanitizeOutput(userSchema, user);
     },
 
     template(layout, data) {
