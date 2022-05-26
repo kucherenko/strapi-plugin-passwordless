@@ -22,9 +22,10 @@
 >
 > **THANK YOU!**
 
+<p>
+  <img width="80" src="https://github.com/kucherenko/strapi-plugin-passwordless/blob/main/logo.png?raw=true">
+</p>
 
-
-![Logo](https://github.com/kucherenko/strapi-plugin-passwordless/blob/main/logo.png?raw=true)
 # Strapi PasswordLess Plugin
 A plugin for [Strapi Headless CMS](https://github.com/strapi/strapi) that provides ability to sign-in/sign-up to an application by link had sent to email. 
 A plugin works together with [Strapi User Permissions Plugin](https://github.com/strapi/strapi/tree/master/packages/plugins/users-permissions) and extends it functionality. 

@@ -9,6 +9,7 @@
 const _ = require("lodash");
 const crypto = require("crypto");
 const {sanitize} = require('@strapi/utils');
+const {nanoid} = require("nanoid");
 
 module.exports = (
   {
@@ -121,7 +122,7 @@ module.exports = (
       const {token_length = 20} = settings;
       const tokensService = strapi.query('plugin::passwordless.token');
       tokensService.update({where: {email}, data: {is_active: false}});
-      const body = crypto.randomBytes(token_length).toString('hex');
+      const body = nanoid(token_length);
       const tokenInfo = {
         email,
         body,

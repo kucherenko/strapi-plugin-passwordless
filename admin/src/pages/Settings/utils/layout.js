@@ -8,8 +8,7 @@ const layout = [
     },
     description: {
       id: getTrad('Settings.enabled.description'),
-      defaultMessage:
-        'Settings.enabled.description',
+      defaultMessage: 'Settings.enabled.description',
     },
     name: 'enabled',
     type: 'bool',

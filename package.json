@@ -48,5 +48,8 @@
   },
   "scripts": {
     "test": "jest"
+  },
+  "dependencies": {
+    "nanoid": "^3.3.4"
   }
 }

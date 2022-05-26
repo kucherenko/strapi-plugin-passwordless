@@ -63,7 +63,7 @@ const SettingsPage = () => {
     onError: () => {
       toggleNotification({
         type: 'warning',
-        message: { id: getTrad('notification.error'), defaultMessage: 'An error occured' },
+        message: { id: getTrad('notification.error'), defaultMessage: 'An error occurred' },
       });
     },
   });
@@ -118,13 +118,23 @@ const SettingsPage = () => {
       </Main>
     );
   }
-  console.log(data)
   return (
     <Main aria-busy={isSubmittingForm}>
       <SettingsPageTitle
         name={formatMessage({
           id: getTrad('Form.title.Settings'),
-          defaultMessage: 'Settings',
+          defaultMessage: 'Configuration',
+        })}
+      />
+      <HeaderLayout
+        id="title"
+        title={formatMessage({
+          id: getTrad('Form.title.Settings'),
+          defaultMessage: 'Configuration',
+        })}
+        subtitle={formatMessage({
+          id: getTrad('Settings.enabled.description'),
+          defaultMessage: 'Enables a secure and seamless emailed link authentication.',
         })}
       />
       <Formik

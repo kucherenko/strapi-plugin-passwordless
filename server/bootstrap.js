@@ -54,11 +54,11 @@ module.exports = async (
       token_length: 20,
       object: 'Passwordless Login',
       message_html: `<p>Hi!</p>
-<p>Please click on the link below to login on the site.</p>
+<p>Please click on the link below to login a strapi driven.</p>
 <p><%= URL %>?loginToken=<%= CODE %></p>
 <p>Thanks.</p>`,
       message_text: `Hi!
-Please click on the link below to login on the site.
+Please click on the link below to login on a strapi driven site.
 <%= URL %>?loginToken=<%= CODE %>
 Thanks.`,
     };
