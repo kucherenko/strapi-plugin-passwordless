@@ -48,7 +48,9 @@ module.exports = (
       const userSettings = await this.userSettings();
       const role = await strapi
         .query('plugin::users-permissions.role')
-        .findOne({type: userSettings.default_role}, []);
+        .findOne({
+          where: {type: userSettings.default_role}
+        });
 
       const newUser = {
         email: user.email,
@@ -157,7 +159,7 @@ module.exports = (
 
     async fetchUser(data) {
       const userSchema = strapi.getModel('plugin::users-permissions.user');
-      const user =  await strapi.query('plugin::users-permissions.user').findOne({where: data, populate: ['role']})
+      const user = await strapi.query('plugin::users-permissions.user').findOne({where: data, populate: ['role']})
       if (!user) {
         return user;
       }
