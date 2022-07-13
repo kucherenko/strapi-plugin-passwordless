@@ -163,7 +163,11 @@ module.exports = (
       if (!user) {
         return user;
       }
-      return await sanitize.sanitizers.defaultSanitizeOutput(userSchema, user);
+      let sanitizedUser = await sanitize.sanitizers.defaultSanitizeOutput(userSchema, user);
+      if(!sanitizedUser.email && user.email){
+        sanitizedUser.email = user.email
+      }
+      return sanitizedUser
     },
 
     template(layout, data) {
