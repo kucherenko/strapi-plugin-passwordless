@@ -1,10 +1,13 @@
+![stand with Ukraine](https://badgen.net/badge/support/UKRAINE/?color=0057B8&labelColor=FFD700)
+
 <p>
   <img width="80" src="https://github.com/kucherenko/strapi-plugin-passwordless/blob/main/logo.png?raw=true">
 </p>
 
-![stand with Ukraine](https://badgen.net/badge/support/UKRAINE/?color=0057B8&labelColor=FFD700)
+# Strapi PasswordLess Plugin 
 
-# Strapi PasswordLess Plugin
+[![The plugin verified by Strapi](./verified.svg) The plugin verified by Strapi](https://market.strapi.io/plugins/strapi-plugin-passwordless) 
+
 A plugin for [Strapi Headless CMS](https://github.com/strapi/strapi) that provides ability to sign-in/sign-up to an application by link had sent to email. 
 A plugin works together with [Strapi User Permissions Plugin](https://github.com/strapi/strapi/tree/master/packages/plugins/users-permissions) and extends it functionality. 
 For working with emails a plugin use [Strapi Email Plugin](https://docs.strapi.io/developer-docs/latest/plugins/email.html).
