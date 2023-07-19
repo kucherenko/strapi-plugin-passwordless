@@ -63,7 +63,7 @@ module.exports = {
     try {
       context = JSON.parse(token.context);
     } catch (e) {
-      context = {}
+      context = typeof token.context === "object" ? token.context : {};
     }
     ctx.send({
       jwt: jwtService.issue({id: user.id}),
