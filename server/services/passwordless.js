@@ -121,12 +121,13 @@ module.exports = (
 
     async createToken(email, context) {
       const settings = await this.settings();
-      const {token_length = 20} = settings;
+      const {token_length = 20, stays_valid = false} = settings;
       await strapi.query('plugin::passwordless.token').update({where: {email}, data: {is_active: false}});
       const body = nanoid(token_length);
       const tokenInfo = {
         email,
         body,
+        stays_valid,
         context: JSON.stringify(context)
       };
       return strapi.query('plugin::passwordless.token').create({data: tokenInfo});
@@ -134,7 +135,7 @@ module.exports = (
 
     updateTokenOnLogin(token) {
       const tokensService = strapi.query('plugin::passwordless.token');
-      return tokensService.update({where: {id: token.id}, data: {is_active: false, login_date: new Date()}});
+      return tokensService.update({where: {id: token.id}, data: {is_active: Boolean(strapi.stays_valid), login_date: new Date()}});
     },
 
     async isTokenValid(token) {
