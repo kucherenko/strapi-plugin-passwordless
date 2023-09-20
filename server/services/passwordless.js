@@ -135,7 +135,7 @@ module.exports = (
 
     updateTokenOnLogin(token) {
       const tokensService = strapi.query('plugin::passwordless.token');
-      return tokensService.update({where: {id: token.id}, data: {is_active: Boolean(strapi.stays_valid), login_date: new Date()}});
+      return tokensService.update({where: {id: token.id}, data: {is_active: Boolean(token.stays_valid), login_date: new Date()}});
     },
 
     async isTokenValid(token) {
