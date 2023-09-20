@@ -39,6 +39,11 @@
       "type": "boolean",
       "default": true,
       "configurable": false
+    },
+    "stays_valid": {
+      "type": "boolean",
+      "default": false,
+      "configurable": true
     }
   }
 }
