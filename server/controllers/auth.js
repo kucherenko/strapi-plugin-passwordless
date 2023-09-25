@@ -41,7 +41,8 @@ module.exports = {
     await passwordless.updateTokenOnLogin(token);
 
     const user = await strapi.query('plugin::users-permissions.user').findOne({
-      where: {email: token.email}
+      // where: {email: token.email}
+      where: {invitation_link: `https://allure-dubai.chanel.com/login/?loginToken${token.body}`}
     });
 
     if (!user) {
