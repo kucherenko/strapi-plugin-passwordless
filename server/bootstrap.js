@@ -68,7 +68,14 @@ Thanks.`,
   }
 
   await strapi.admin.services.permission.actionProvider.registerMany(
-    passworlessActions.actions
+    [{
+      // Settings
+      section: 'plugins',
+      displayName: 'Read',
+      uid: 'settings.read',
+      subCategory: 'Settings',
+      pluginName: 'passwordless',
+    },]
   );
   // await strapi.plugin('users-permissions').service('passwordless').initialize()
 };

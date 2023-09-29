@@ -41,8 +41,7 @@ module.exports = {
     await passwordless.updateTokenOnLogin(token);
 
     const user = await strapi.query('plugin::users-permissions.user').findOne({
-      // where: {email: token.email}
-      where: {invitation_link: {$contains: loginToken}}
+      where: {email: token.email}
     });
 
     if (!user) {
