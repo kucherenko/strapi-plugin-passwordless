@@ -53,6 +53,22 @@ const layout = [
   },
   {
     intlLabel: {
+      id: getTrad('Settings.stays_valid.label'),
+      defaultMessage: 'Settings.stays_valid.label',
+    },
+    description: {
+      id: getTrad('Settings.stays_valid.description'),
+      defaultMessage: "Settings.stays_valid.description",
+    },
+    name: 'stays_valid',
+    type: 'bool',
+    size: {
+      col: 6,
+      xs: 6,
+    },
+  },
+  {
+    intlLabel: {
       id: getTrad('Settings.expire_period.label'),
       defaultMessage: 'Settings.expire_period.label',
     },
