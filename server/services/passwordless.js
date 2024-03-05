@@ -9,7 +9,7 @@
 const _ = require("lodash");
 const crypto = require("crypto");
 const {sanitize} = require('@strapi/utils');
-const {nanoid} = require("nanoid");
+const {nanoid, customRandom, customAlphabet} = require("nanoid");
 
 module.exports = (
   {
@@ -121,9 +121,9 @@ module.exports = (
 
     async createToken(email, context) {
       const settings = await this.settings();
-      const {token_length = 20, stays_valid = false} = settings;
+      const {token_length = 20, stays_valid = false, format='0123456789ABCD'} = settings;
       await strapi.query('plugin::passwordless.token').update({where: {email}, data: {is_active: false}});
-      const body = nanoid(token_length);
+      const body = customAlphabet(format, token_length)();
       const tokenInfo = {
         email,
         body,
