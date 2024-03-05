@@ -69,6 +69,23 @@ const layout = [
   },
   {
     intlLabel: {
+      id: getTrad('Settings.format.label'),
+      defaultMessage: 'Settings.format.label',
+    },
+    description: {
+      id: getTrad('Settings.format.description'),
+      defaultMessage: "Settings.format.description",
+    },
+    name: 'format',
+    type: 'string',
+    defaultValue: '0123456789ABCD',
+    size: {
+      col: 6,
+      xs: 6,
+    },
+  },
+  {
+    intlLabel: {
       id: getTrad('Settings.expire_period.label'),
       defaultMessage: 'Settings.expire_period.label',
     },
