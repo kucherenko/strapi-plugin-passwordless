@@ -55,14 +55,16 @@ module.exports = (
       const newUser = {
         email: user.email,
         username: user.username || user.email,
-        role: {id: role.id}
+        role: {id: role.id},
+        ...user.extraParams
       };
+
       return strapi
         .query('plugin::users-permissions.user')
         .create({data: newUser, populate: ['role']});
     },
 
-    async user(email, username) {
+    async user(email, username, extraParams) {
       const settings = await this.settings();
       const {user: userService} = strapi.plugins['users-permissions'].services;
       const user = email ? await this.fetchUser({email}) : null;
@@ -74,7 +76,7 @@ module.exports = (
         return userByUsername
       }
       if (email && settings.createUserIfNotExists) {
-        return this.createUser({email, username})
+        return this.createUser({email, username, extraParams})
       }
       return false;
     },

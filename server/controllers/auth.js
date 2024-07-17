@@ -86,6 +86,12 @@ module.exports = {
     const email = params.email ? params.email.trim().toLowerCase() : null;
     const context = params.context || {};
     const username = params.username || null;
+    const keepParams = params.keepParams || [];
+
+    const extraParams = keepParams.reduce((extra, param) => {
+      extra[param] = params[param];
+      return extra;
+    }, {});
 
     const isEmail = emailRegExp.test(email);
 
@@ -95,7 +101,7 @@ module.exports = {
 
     let user;
     try {
-      user = await passwordless.user(email, username);
+      user = await passwordless.user(email, username, extraParams);
     } catch (e) {
       return ctx.badRequest('wrong.user')
     }
